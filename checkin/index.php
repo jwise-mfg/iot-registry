@@ -3,6 +3,7 @@ $postBody=file_get_contents('php://input');
 
 $devInfo = new stdClass();
 $devInfo->wanip = getUserIP();
+$devInfo->lastcheckin = date('m/d/Y h:i:s a', time());
 if (isset($_GET["iotid"]))
    $devInfo->iotid = $_GET["iotid"];
 else
