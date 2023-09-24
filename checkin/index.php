@@ -29,7 +29,7 @@ if (isset($postBody)) {
    }
 }
 
-$filenameBase = "cache/".$devInfo->iotid;
+$filenameBase = "../cache/".$devInfo->iotid;
 file_put_contents ($filenameBase . "info.json", json_encode($devInfo));
 file_put_contents ($filenameBase . "ports.txt", json_encode($ports));
 

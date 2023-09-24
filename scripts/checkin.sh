@@ -46,5 +46,5 @@ url=${url}${queryString}
 
 # Find Open ports
 ports=$(netstat -lntu)
-echo $url
+#echo $url
 curl --header 'Content-Type: text/plan' --data "$ports" "$url"
