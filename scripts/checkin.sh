@@ -31,7 +31,7 @@ queryString=${queryString}\&
 
 # Find last logged in user
 if [ $(which hostname) ]; then
-   lastUsers=$(last -1 -n 1 --nohostname)
+   lastUsers=$(last -1 -n 1)
    set -- $lastUsers
    currUser=$1
    queryString=${queryString}username=${currUser}
