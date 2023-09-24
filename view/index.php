@@ -1,6 +1,6 @@
-Devices will be listed here.
+<p>Devices will be listed here.</p>
 
-You might want to secure this folder.
+<p>You might want to secure this folder.</p>
 
 <?php
 $files = glob('../cache/*.{json}', GLOB_BRACE);
