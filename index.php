@@ -1,6 +1,6 @@
 <?php
-if (file_exists("home.html")) {
-    $content = file_get_contents('./README.md', true);
+if (file_exists("./home.html")) {
+    $content = file_get_contents('./home.html', true);
     header('Content-type: text/html; charset=utf-8');
     echo $content;
 } else {
