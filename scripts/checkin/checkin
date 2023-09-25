@@ -23,6 +23,7 @@ installservice() {
       exit
    fi
    \cp -r $SCRIPT_DIR/$0 $DEST_PATH"checkin"
+   chmod +x $DEST_PATH"checkin"
    if [ -f $currHome".iotid" ]; then
       mv $currHome".iotid" $DEST_PATH".iotid"
    else
