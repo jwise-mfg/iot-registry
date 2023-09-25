@@ -80,7 +80,7 @@ removeservice() {
    SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
    DEST_PATH=/opt/iot-registry/
    UNIT_PATH=/etc/systemd/system/iot-registry.service
-   if [ -f $DEST_PATH* ]; then
+   if [ -f "$DEST_PATH*" ]; then
       mv $DEST_PATH"checkin" $currHome"checkin"
       chown $currUser:$currUser $currHome"checkin"
       mv $DEST_PATH".iotid" $currHome".iotid"
