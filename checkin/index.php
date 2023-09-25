@@ -12,8 +12,15 @@ if (isset($_GET["iotid"])) {
    $devInfo->iotid = filter_var($_GET["iotid"], FILTER_SANITIZE_STRING);
    $dataScore++;
 }
-else
-   $devInfo->iotid = uniqid();
+else {
+   if(!isset($_COOKIE['iotid'])) {
+      $newId = uniqid();
+      setcookie('iotid', $newId);
+      $_COOKIE['iotid'] = $newId;
+  }
+  $devInfo->iotid = $_COOKIE['iotid'];
+}
+   
 if (isset($_GET["hostname"])) {
    $devInfo->hostname = filter_var($_GET["hostname"], FILTER_SANITIZE_STRING);
    $dataScore++;
