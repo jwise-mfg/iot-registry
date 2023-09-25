@@ -34,7 +34,8 @@ installservice() {
    if [ $(which systemctl) ]; then
       echo "[Unit]" > $UNIT_PATH
       echo "Description=IOT Registry Service" >> $UNIT_PATH
-      echo "After=network.target" >> $UNIT_PATH
+      echo "Wants = network-online.target" >> $UNIT_PATH
+      echo "After = network.target network-online.target" >> $UNIT_PATH
       echo "" >> $UNIT_PATH
       echo "[Service]" >> $UNIT_PATH
       echo "Type=oneshot" >> $UNIT_PATH
