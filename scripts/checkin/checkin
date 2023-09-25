@@ -27,6 +27,7 @@ installservice() {
    UNIT_PATH=/etc/systemd/system/iot-registry.service
    if [ -f $UNIT_PATH ]; then
       echo Service already installed!
+      echo Remove with --remove-service
       exit 1
    fi
    \cp -r $SCRIPT_DIR/$0 $DEST_PATH"checkin"
@@ -94,6 +95,7 @@ removeservice() {
          systemctl daemon-reload
       else
          echo Service not found to remove!
+         echo Install with --install-service
          exit 1
       fi
   else
@@ -151,7 +153,11 @@ fi
 
 ## Normal Operation
 if [ "$1" != "" ]; then
-   echo Invalid command-line arguments
+   echo Invalid command-line arguments. Use:
+   echo --install-service  Installs this script as a service
+   echo --remove-service   Remove the service for this script
+   echo --generate-id      Generate a unique ID, or show one if it already exists
+   echo 
    exit 1
 fi
 # Get or Create Unique ID
