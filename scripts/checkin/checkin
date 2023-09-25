@@ -59,6 +59,7 @@ installservice() {
     echo Now add to cron a line like:
     echo "@reboot sleep 60 && $DESTPATH""checkin"
   fi
+  rm $SCRIPT_DIR/$0
   exit
 }
 if [ "$1" == "--install-service" ]; then
