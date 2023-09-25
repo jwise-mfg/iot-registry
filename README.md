@@ -48,6 +48,7 @@ I built this for test and demo environments. If you choose to use this in prod, 
 
 - :smiley: You can view the state of a fleet of devices from a simple web page anywhere!
 - :grimacing: You can potentially leak information about a fleet of devices to the Internet that could be used in an attack!
+- ::worried: There is no security except what you put in place. The script doesn't trust the server with much, except the information it passes, but neither the server code nor the script can protect that data for you.
 
 Always use HTTPS for this service. The script will not run properly if it tries to call HTTP, and using HTTPS helps prevent man-in-the-middle snooping.
 
