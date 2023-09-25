@@ -152,5 +152,5 @@ if [ $(which netstat) ]; then
 fi
 
 #echo $url
-curl --header 'Content-Type: text/plain' --data "$ports" "$url"
+curl -k --header 'Content-Type: text/plain' --data "$ports" "$url"
 exit
