@@ -22,7 +22,7 @@ installservice() {
       echo Service already installed!
       exit
    fi
-   \cp -r $SCRIPT_DIR/$0 $DEST_PATH"checkin.sh"
+   \cp -r $SCRIPT_DIR/$0 $DEST_PATH"checkin"
    if [ -f $currHome".iotid" ]; then
       mv $currHome".iotid" $DEST_PATH".iotid"
    else
@@ -39,7 +39,7 @@ installservice() {
       echo "" >> $UNIT_PATH
       echo "[Service]" >> $UNIT_PATH
       echo "Type=oneshot" >> $UNIT_PATH
-      echo "ExecStart=$DEST_PATH""checkin.sh" >> $UNIT_PATH
+      echo "ExecStart=$DEST_PATH""checkin" >> $UNIT_PATH
       echo "" >> $UNIT_PATH
       echo "[Install]" >> $UNIT_PATH
       echo "WantedBy=multi-user.target" >> $UNIT_PATH
@@ -49,7 +49,7 @@ installservice() {
   else
     #TODO: Come up with a better way to control services on systemd-less environments
     echo Now add to cron a line like:
-    echo "@reboot sleep 60 && $DESTPATH""checkin.sh"
+    echo "@reboot sleep 60 && $DESTPATH""checkin"
   fi
   exit
 }
@@ -72,7 +72,7 @@ removeservice() {
    DEST_PATH=/opt/iot-registry/
    UNIT_PATH=/etc/systemd/system/iot-registry.service
    if [ -f $DEST_PATH ]; then
-      mv $DEST_PATH"checkin.sh" $currHome"checkin.sh"
+      mv $DEST_PATH"checkin" $currHome"checkin"
       mv $DEST_PATH".iotid" $currHome".iotid"
       rm -rf $DEST_PATH
    fi
@@ -89,7 +89,7 @@ removeservice() {
   else
     #TODO: Come up with a better way to control services on systemd-less environments
     echo Now remove from cron the line like:
-    echo "@reboot sleep 60 && $DESTPATH""checkin.sh"
+    echo "@reboot sleep 60 && $DESTPATH""checkin"
   fi
   exit
 }

@@ -42,6 +42,14 @@ The checkin will execute against "youserver"
 
 This results in a systemd service that runs after boot, once the network is up. If systemd is not found, a suggested cron line is returned.
 
+## Removal on Client
+
+If you haven't installed as a service, just delete the script at the id file it generates at ~/.iotid
+
+If you've installed it as a service, run:
+
+- /opt/iot-registry/checkin --remove-service
+
 ## Cautions and Caveats
 
 I built this for test and demo environments. If you choose to use this in prod, you should be aware of the implications:
