@@ -1,5 +1,5 @@
 #!/bin/bash
-url='https://iot.jonathanwise.net/checkin/'
+url='<SERVERPATH>/checkin/'
 queryString='?version=2&'
 
 ## Install as Service
