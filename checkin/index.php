@@ -1,4 +1,5 @@
 <?php
+include ("../common.php");
 $postBody=file_get_contents('php://input');
 
 $devInfo = new stdClass();
@@ -71,31 +72,5 @@ $filenameBase = "../cache/".$devInfo->iotid;
 file_put_contents ($filenameBase . "info.json", json_encode($devInfo));
 if ($ports != "")
    file_put_contents ($filenameBase . "ports.txt", json_encode($ports));
-
-function getUserIP()
-{
-    // Get real visitor IP behind CloudFlare network
-    if (isset($_SERVER["HTTP_CF_CONNECTING_IP"])) {
-              $_SERVER['REMOTE_ADDR'] = $_SERVER["HTTP_CF_CONNECTING_IP"];
-              $_SERVER['HTTP_CLIENT_IP'] = $_SERVER["HTTP_CF_CONNECTING_IP"];
-    }
-    $client  = @$_SERVER['HTTP_CLIENT_IP'];
-    $forward = @$_SERVER['HTTP_X_FORWARDED_FOR'];
-    $remote  = $_SERVER['REMOTE_ADDR'];
-
-    if(filter_var($client, FILTER_VALIDATE_IP))
-    {
-        $ip = $client;
-    }
-    elseif(filter_var($forward, FILTER_VALIDATE_IP))
-    {
-        $ip = $forward;
-    }
-    else
-    {
-        $ip = $remote;
-    }
-    return $ip;
-}
 ?>
 OK
