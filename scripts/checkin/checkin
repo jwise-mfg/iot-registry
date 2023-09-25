@@ -12,7 +12,7 @@ finduser() {
 installservice() {
    if [ "$EUID" -ne 0 ]
       then echo "Please run as root"
-      exit
+      exit 1
    fi
    echo Installing as Service...
    currUser=$(finduser)
@@ -27,7 +27,7 @@ installservice() {
    UNIT_PATH=/etc/systemd/system/iot-registry.service
    if [ -f $UNIT_PATH ]; then
       echo Service already installed!
-      exit
+      exit 1
    fi
    \cp -r $SCRIPT_DIR/$0 $DEST_PATH"checkin"
    chmod +x $DEST_PATH"checkin"
@@ -60,17 +60,18 @@ installservice() {
     echo "@reboot sleep 60 && $DESTPATH""checkin"
   fi
   rm $SCRIPT_DIR/$0
-  exit
+  exit 0
 }
 if [ "$1" == "--install-service" ]; then
    installservice
+   exit
 fi
 
 ## Remove Service
 removeservice() {
    if [ "$EUID" -ne 0 ]
       then echo "Please run as root"
-      exit
+      exit 1
    fi
    echo Removing Service...
    currUser=$(finduser)
@@ -80,7 +81,9 @@ removeservice() {
    UNIT_PATH=/etc/systemd/system/iot-registry.service
    if [ -f $DEST_PATH* ]; then
       mv $DEST_PATH"checkin" $currHome"checkin"
+      chown $currUser:$currUser $currHome"checkin"
       mv $DEST_PATH".iotid" $currHome".iotid"
+      chown $currUser:$currUser $currHome"iotid"
       rm -rf $DEST_PATH
    fi
    if [ $(which systemctl) ]; then
@@ -91,17 +94,18 @@ removeservice() {
          systemctl daemon-reload
       else
          echo Service not found to remove!
-         exit
+         exit 1
       fi
   else
     #TODO: Come up with a better way to control services on systemd-less environments
     echo Now remove from cron the line like:
     echo "@reboot sleep 60 && $DESTPATH""checkin"
   fi
-  exit
+  exit 0
 }
 if [ "$1" == "--remove-service" ]; then
    removeservice
+   exit
 fi
 
 ## Prompt user
@@ -142,11 +146,16 @@ if [ "$1" == "--generate-id" ]; then
          echo Suggested hostname: $hostname
       fi
    fi
-   exit
+   exit 0
 fi
 
 ## Normal Operation
+if [ "$1" != "" ]; then
+   echo Invalid command-line arguments
+fi
 # Get or Create Unique ID
+currUser=$(finduser)
+currHome="/home/$currUser/"
 uuid=$(generateid)
 queryString=${queryString}iotid=$uuid
 queryString=${queryString}\&
