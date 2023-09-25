@@ -44,9 +44,9 @@ if (isset($_GET["ips"])) {
          }
       }
    } else { //Just one IP
-      $thisIp = filter_var($ip, FILTER_VALIDATE_IP);
+      $thisIp = filter_var($_GET["ips"], FILTER_VALIDATE_IP);
       if ($thisIp) {
-         $devInfo->lanips = $ips;
+         $devInfo->lanips = $thisIp;
       }
    }
    $dataScore++;
