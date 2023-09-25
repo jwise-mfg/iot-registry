@@ -14,7 +14,8 @@ installservice() {
       then echo "Please run as root"
       exit 1
    fi
-   echo Installing as Service...
+   DEST_PATH=/opt/iot-registry/
+   echo Installing as Service in: $DEST_PATH
    currUser=$(finduser)
    currHome="/home/$currUser/"
    if [ "currUser" == "root" ]; then
@@ -23,7 +24,6 @@ installservice() {
    
    mkdir -p /opt/iot-registry
    SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
-   DEST_PATH=/opt/iot-registry/
    UNIT_PATH=/etc/systemd/system/iot-registry.service
    if [ -f $UNIT_PATH ]; then
       echo Service already installed!
