@@ -69,20 +69,22 @@ removeservice() {
    currHome="/home/$currUser/"
    SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
    DEST_PATH=/opt/iot-registry/
-   if [ ! -f $DEST_PATH ]; then
-      echo Service not found to remove!
-      exit
+   UNIT_PATH=/etc/systemd/system/iot-registry.service
+   if [ -f $DEST_PATH ]; then
+      mv $DEST_PATH"checkin.sh" $currHome"checkin.sh"
+      mv $DEST_PATH".iotid" $currHome".iotid"
+      rm -rf $DEST_PATH
    fi
-   mv $DEST_PATH"checkin.sh" $currHome"checkin.sh"
-   mv $DEST_PATH".iotid" $currHome".iotid"
-   rm -rf $DEST_PATH
-
    if [ $(which systemctl) ]; then
-      systemctl stop iot-registry.service
-      systemctl disable iot-registry.service
-      UNIT_PATH=/etc/systemd/system/iot-registry.service
-      rm $UNIT_PATH
-      systemctl daemon-reload
+      if [ -f $UNIT_PATH ]; then
+         systemctl stop iot-registry.service
+         systemctl disable iot-registry.service
+         rm $UNIT_PATH
+         systemctl daemon-reload
+      else
+         echo Service not found to remove!
+         exit
+      fi
   else
     #TODO: Come up with a better way to control services on systemd-less environments
     echo Now remove from cron the line like:
