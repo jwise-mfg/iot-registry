@@ -83,7 +83,7 @@ removeservice() {
       mv $DEST_PATH"checkin" $currHome"checkin"
       chown $currUser:$currUser $currHome"checkin"
       mv $DEST_PATH".iotid" $currHome".iotid"
-      chown $currUser:$currUser $currHome"iotid"
+      chown $currUser:$currUser $currHome".iotid"
       rm -rf $DEST_PATH
    fi
    if [ $(which systemctl) ]; then
