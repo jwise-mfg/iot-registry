@@ -75,7 +75,6 @@ removeservice() {
    echo Removing Service...
    currUser=$(finduser)
    currHome="/home/$currUser/"
-echo $currHome
    SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
    DEST_PATH=/opt/iot-registry/
    UNIT_PATH=/etc/systemd/system/iot-registry.service
