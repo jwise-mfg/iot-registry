@@ -1,8 +1,10 @@
 # IOT Registry
 
-This is a simple IOT registry for finding headless devices. You can run it on your own domain, or review the source at https://github.com/jwise-mfg/iot-registry
+This is a simple IOT registry for finding headless devices. It uses a client-side script against a very basic server-side registry.
 
-When run, the script "checks in" with your web server and reports some basic stats about the device its running on, to help with finding and administering headless IOT devices (that run some flavor of Linux).
+You can run it on your own domain, or review the source at https://github.com/jwise-mfg/iot-registry
+
+When run on a device, the script "checks in" with your web server and reports some basic stats about the device its running on, to help with finding and administering headless IOT devices (that run some flavor of Linux).
 
 ## Installation on Server
 
