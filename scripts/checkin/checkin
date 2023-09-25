@@ -18,7 +18,7 @@ installservice() {
    echo Installing as Service in: $DEST_PATH
    currUser=$(finduser)
    currHome="/home/$currUser/"
-   if [ "currUser" == "root" ]; then
+   if [ "$currUser" == "root" ]; then
       echo "Warning: root user in active use, don't ship in this state!"
    fi
    
