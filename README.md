@@ -52,4 +52,4 @@ I built this for test and demo environments. If you choose to use this in prod, 
 
 Always use HTTPS for this service. The script will not run properly if it tries to call HTTP, and using HTTPS helps prevent man-in-the-middle snooping.
 
-There is no warranty or indemnification either explicit or implied from the author and publisher for any use of this code. Use appropriately and at your own risk.
+There is no warranty or indemnification, either explicit or implied, from the author and publisher for any use of this code. Use appropriately and at your own risk.
