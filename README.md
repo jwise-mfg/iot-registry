@@ -38,7 +38,7 @@ The checkin will execute against "youserver"
 
 - wget https://yourserver/scripts/checkin
 - chmod +x checkin
-- ./checkin --install-service
+- sudo ./checkin --install-service
 
 This results in a systemd service that runs after boot, once the network is up. If systemd is not found, a suggested cron line is returned.
 
@@ -48,7 +48,7 @@ If you haven't installed as a service, just delete the script at the id file it 
 
 If you've installed it as a service, run:
 
-- /opt/iot-registry/checkin --remove-service
+- sudo /opt/iot-registry/checkin --remove-service
 
 ## Cautions and Caveats
 
