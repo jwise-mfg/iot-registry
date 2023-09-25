@@ -10,7 +10,11 @@ Clone this repo to your web server of choice.
 
 The web server needs PHP 7 or up.
 
+Both client and server assume this service will be at the root of the domain (or subdomain), so https://iot.yourserver/ would work, but https://www.yourserver/iot would not.
+
 You probably want to secure the `cache` and `view` folders (which is done differently in different web servers, and can't be covered here.)
+
+If you don't want to display this README as the home page of your service, add a file called home.html to the root (or replace the index.php)
 
 ## Installation on Client
 
@@ -22,15 +26,15 @@ The checkin script does the work on the device, and should be scheduled to run w
 
 ### Manual Start
 
-- wget https://myserver/scripts/checkin
+- wget https://yourserver/scripts/checkin
 - chmod +x checkin
 - ./checkin
 
-The checkin will execute against "myserver"
+The checkin will execute against "youserver"
 
 ### Example installation:
 
-- wget https://myserver/scripts/checkin
+- wget https://yourserver/scripts/checkin
 - chmod +x checkin
 - ./checkin --install-service
 
