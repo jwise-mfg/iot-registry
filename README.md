@@ -6,6 +6,8 @@ You can run it on your own domain, or review the source at https://github.com/jw
 
 When run on a device, the script "checks in" with your web server and reports some basic stats about the device its running on, to help with finding and administering headless IOT devices (that run some flavor of Linux).
 
+The script attempts to find or generate a unique id for the device, which is persisted on the file system unless deleted. This helps prevent duplicate entries in the registry. See Removal notes below for deleting this file.
+
 ## Installation on Server
 
 Clone this repo to your web server of choice.
@@ -49,6 +51,10 @@ If you haven't installed as a service, just delete the script at the id file it 
 If you've installed it as a service, run:
 
 - sudo /opt/iot-registry/checkin --remove-service
+
+The unique id file will not be deleted upon removal of the service (in case you want to continue to use the script stand-alone). To delete this file after removing the service:
+
+- rm ~/.iotid
 
 ## Cautions and Caveats
 
