@@ -2,6 +2,12 @@
 url='<SERVERPATH>/checkin/'
 queryString='?version=2&'
 
+finduser() {
+   lastUsers=$(last -1 -n 1)
+   set -- $lastUsers
+   echo $1
+}
+
 ## Install as Service
 installservice() {
    if [ "$EUID" -ne 0 ]
@@ -9,10 +15,11 @@ installservice() {
       exit
    fi
    echo Installing as Service...
-   lastUsers=$(last -1 -n 1 --nohostname)
-   set -- $lastUsers
-   currUser=$1
+   currUser=$(finduser)
    currHome="/home/$currUser/"
+   if [ "currUser" == "root" ]; then
+      echo "Warning: root user in active use, don't ship in this state!"
+   fi
    
    mkdir -p /opt/iot-registry
    SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
@@ -65,9 +72,7 @@ removeservice() {
       exit
    fi
    echo Removing Service...
-   lastUsers=$(last -1 -n 1 --nohostname)
-   set -- $lastUsers
-   currUser=$1
+   currUser=$(finduser)
    currHome="/home/$currUser/"
    SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
    DEST_PATH=/opt/iot-registry/
@@ -98,19 +103,50 @@ if [ "$1" == "--remove-service" ]; then
    removeservice
 fi
 
-## Normal Operation
+## Prompt user
+function yes_or_no {
+    while true; do
+        read -p "$* [y/n]: " yn
+        case $yn in
+            [Yy]*) return 0  ;;  
+            [Nn]*) return  1 ;;
+        esac
+    done
+}
 
+## Generate IOT ID
+generateid() {
+   if [ -f $currHome/.iotid ]; then
+      uuid=$(cat $currHome/.iotid)
+   fi
+   if [ -f /opt/iot-registry/.iotid ]; then
+      uuid=$(cat /opt/iot-registry/.iotid)
+   fi
+   if [ ! "$uuid" ]; then
+      uuid=$(cat /proc/sys/kernel/random/uuid)
+      echo $uuid > $currHome/.iotid
+   fi
+   echo $uuid
+}
+if [ "$1" == "--generate-id" ]; then
+   currUser=$(finduser)
+   currHome="/home/$currUser/"
+   uuid="$(generateid)"
+   echo IOT ID: $uuid;
+   if [[ $(hostname) != *${uuid:(-6)} ]]; then
+      hostname="$(hostname)"-"${uuid:(-6)}"
+      if [ "$EUID" -eq 0 ]; then
+         yes_or_no "Set suggested hostname? $hostname" && hostname $hostname
+      else
+         echo Suggested hostname: $hostname
+      fi
+   fi
+   exit
+fi
+
+## Normal Operation
 # Get or Create Unique ID
-if [ -f ~/.iotid ]; then
-   uuid=$(cat ~/.iotid)
-fi
-if [ -f /opt/iot-registry/.iotid ]; then
-   uuid=$(cat /opt/iot-registry/.iotid)
-fi
-if [ ! "$uuid" ]; then
-   uuid=$(cat /proc/sys/kernel/random/uuid)
-   echo $uuid > ~/.iotid
-fi
+uuid=$(generateid)
 queryString=${queryString}iotid=$uuid
 queryString=${queryString}\&
 
@@ -133,9 +169,6 @@ queryString=${queryString}\&
 
 # Find last logged in user
 if [ $(which hostname) ]; then
-   lastUsers=$(last -1 -n 1)
-   set -- $lastUsers
-   currUser=$1
    queryString=${queryString}username=${currUser}
 fi
 queryString=${queryString}\&
