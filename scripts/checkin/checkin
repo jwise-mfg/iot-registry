@@ -154,9 +154,9 @@ fi
 ## Normal Operation
 if [ "$1" != "" ]; then
    echo Invalid command-line arguments. Use:
-   echo --install-service  Installs this script as a service
-   echo --remove-service   Remove the service for this script
-   echo --generate-id      Generate a unique ID, or show one if it already exists
+   echo --install-service   Installs this script as a service
+   echo --remove-service    Remove the service for this script
+   echo --generate-id       Generate a unique ID, or show one if it already exists
    exit 1
 fi
 # Get or Create Unique ID
