@@ -4,14 +4,21 @@ $postBody=file_get_contents('php://input');
 $devInfo = new stdClass();
 $devInfo->wanip = getUserIP();
 $devInfo->lastcheckin = date('m/d/Y h:i:s a', time());
-if (isset($_GET["iotid"]))
+$dataScore = 0;
+if (isset($_GET["iotid"])) {
    $devInfo->iotid = $_GET["iotid"];
+   $dataScore++;
+}
 else
    $devInfo->iotid = uniqid();
-if (isset($_GET["hostname"]))
+if (isset($_GET["hostname"])) {
    $devInfo->hostname = $_GET["hostname"];
-if (isset($_GET["username"]))
+   $dataScore++;
+}
+if (isset($_GET["username"])) {
    $devInfo->username = $_GET["username"];
+   $dataScore++;
+}
 if (isset($_GET["arch"]))
    $devInfo->arch = $_GET["arch"];
 if (isset($_GET["ips"])) {
@@ -22,7 +29,10 @@ if (isset($_GET["ips"])) {
    } else {
       $devInfo->lanips = $ips;
    }
+   $dataScore++;
 }
+if ($dataScore < 3)
+   die("Insufficient Data");
 $ports = "";
 if (isset($postBody)) {
    foreach(preg_split("/((\r?\n)|(\r\n?))/", $postBody) as $line){
