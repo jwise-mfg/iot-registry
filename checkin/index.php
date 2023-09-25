@@ -50,7 +50,7 @@ if ($dataScore < 3)
 // Check port payload
 $ports = "";
 if (isset($postBody)) {
-   if (strpos($postBody, "Active Internet connections") != -1) {
+   if (strpos($postBody, "Active Internet connections")) {
       foreach(preg_split("/((\r?\n)|(\r\n?))/", $postBody) as $line){
          $ports = $ports . filter_var($line, FILTER_SANITIZE_STRING) . PHP_EOL;
       }   
