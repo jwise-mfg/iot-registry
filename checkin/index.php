@@ -6,37 +6,47 @@ $devInfo->wanip = getUserIP();
 $devInfo->lastcheckin = date('m/d/Y h:i:s a', time());
 $dataScore = 0;
 if (isset($_GET["iotid"])) {
-   $devInfo->iotid = $_GET["iotid"];
+   $devInfo->iotid = filter_var($_GET["iotid"], FILTER_SANITIZE_STRING);
    $dataScore++;
 }
 else
    $devInfo->iotid = uniqid();
 if (isset($_GET["hostname"])) {
-   $devInfo->hostname = $_GET["hostname"];
+   $devInfo->hostname = filter_var($_GET["hostname"], FILTER_SANITIZE_STRING);
    $dataScore++;
 }
 if (isset($_GET["username"])) {
-   $devInfo->username = $_GET["username"];
+   $devInfo->username = filter_var($_GET["username"], FILTER_SANITIZE_STRING);
    $dataScore++;
 }
-if (isset($_GET["arch"]))
-   $devInfo->arch = $_GET["arch"];
+if (isset($_GET["arch"])) {
+   $devInfo->arch = filter_var($_GET["arch"], FILTER_SANITIZE_STRING);
+}
 if (isset($_GET["ips"])) {
    $ips = $_GET["ips"];
-   if (strpos($ips, ",") > -1) {
+   if (strpos($ips, ",") > -1) { //List of IPs
       $ipList = explode($ips, ",");
-      $devInfo->lanips = $ipList;
-   } else {
-      $devInfo->lanips = $ips;
+      $devInfo->lanips = [];
+      foreach ($ipList as $thisIp) {
+         $thisIp = filter_var($thisIp, FILTER_VALIDATE_IP);
+         if ($thisIp) {
+            array_push($devInfo->lanips, $thisIp);
+         }
+      }
+   } else { //Just one IP
+      $thisIp = filter_var($ip, FILTER_VALIDATE_IP);
+      if ($thisIp) {
+         $devInfo->lanips = $ips;
+      }
    }
    $dataScore++;
 }
 if ($dataScore < 3)
    die("Insufficient Data");
 $ports = "";
-if (isset($postBody)) {
+if (isset($postBody) && strpos($postBody, "Active Internet connections") != -1) {
    foreach(preg_split("/((\r?\n)|(\r\n?))/", $postBody) as $line){
-      $ports = $ports . $line . PHP_EOL;
+      $ports = $ports . filter_var($line, FILTER_SANITIZE_STRING) . PHP_EOL;
    }
 }
 
