@@ -152,6 +152,7 @@ fi
 ## Normal Operation
 if [ "$1" != "" ]; then
    echo Invalid command-line arguments
+   exit 1
 fi
 # Get or Create Unique ID
 currUser=$(finduser)
