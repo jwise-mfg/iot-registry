@@ -140,12 +140,17 @@ if [ "$1" == "--generate-id" ]; then
    currHome="/home/$currUser/"
    uuid="$(generateid)"
    echo IOT ID: $uuid;
+   # Suggest/set hostnames
    if [[ $(hostname) != *${uuid:(-6)} ]]; then
-      hostname="$(hostname)"-"${uuid:(-6)}"
+      newhost="$(hostname)"-"${uuid:(-6)}"
       if [ "$EUID" -eq 0 ]; then
-         yes_or_no "Set suggested hostname? $hostname" && hostname $hostname
+         if [ $(which systemctl) ]; then
+            yes_or_no "Set suggested hostname? $newhost" && hostname $newhost && hostnamectl set-hostname $newhost
+         else
+            echo Suggested hostname: $newhost
+         fi   
       else
-         echo Suggested hostname: $hostname
+         echo Suggested hostname: $newhost
       fi
    fi
    exit 0
