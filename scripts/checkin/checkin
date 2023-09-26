@@ -24,8 +24,8 @@ installservice() {
    
    mkdir -p /opt/iot-registry
    SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
-   UNIT_PATH=/etc/systemd/system/iot-registry.service
-   if [ -f $UNIT_PATH ]; then
+   UNIT_PATH=/etc/systemd/system/iot-registry
+   if [ -f "$UNIT_PATH"".service" ]; then
       echo Service already installed!
       echo Remove with --remove-service
       exit 1
@@ -42,28 +42,28 @@ installservice() {
    fi
    if [ $(which systemctl) ]; then
       # Create the Service
-      echo "[Unit]" > $UNIT_PATH
-      echo "Description=IOT Registry Service" >> $UNIT_PATH
-      echo "Wants = network-online.target" >> $UNIT_PATH
-      echo "After = network.target network-online.target" >> $UNIT_PATH
-      echo "" >> $UNIT_PATH
-      echo "[Service]" >> $UNIT_PATH
-      echo "Type=oneshot" >> $UNIT_PATH
-      echo "ExecStart=$DEST_PATH""checkin" >> $UNIT_PATH
-      echo "" >> $UNIT_PATH
-      echo "[Install]" >> $UNIT_PATH
-      echo "WantedBy=multi-user.target" >> $UNIT_PATH
+      echo "[Unit]" > "$UNIT_PATH"".service"
+      echo "Description=IOT Registry Service" >> "$UNIT_PATH"".service"
+      echo "Wants = network-online.target" >> "$UNIT_PATH"".service"
+      echo "After = network.target network-online.target" >> "$UNIT_PATH"".service"
+      echo "" >> "$UNIT_PATH"".service"
+      echo "[Service]" >> "$UNIT_PATH"".service"
+      echo "Type=oneshot" >> "$UNIT_PATH"".service"
+      echo "ExecStart=$DEST_PATH""checkin" >> "$UNIT_PATH"".service"
+      echo "" >> "$UNIT_PATH"".service"
+      echo "[Install]" >> "$UNIT_PATH"".service"
+      echo "WantedBy=multi-user.target" >> "$UNIT_PATH"".service"
       # Create the Timer
-      echo "[Unit]" > $UNIT_PATH
-      echo "Description=Periodic IOT Registry Checkin" >> $UNIT_PATH
-      echo "" >> $UNIT_PATH
-      echo "[Timer]" >> $UNIT_PATH
-      echo "OnUnitActiveSec=30m" >> $UNIT_PATH
-      echo "Persistent=true" >> $UNIT_PATH
-      echo "RandomizedDelaySec=20s" >> $UNIT_PATH
-      echo "" >> $UNIT_PATH
-      echo "[Install]" >> $UNIT_PATH
-      echo "WantedBy=timers.target" >> $UNIT_PATH
+      echo "[Unit]" > "$UNIT_PATH"".timer"
+      echo "Description=Periodic IOT Registry Checkin" >> "$UNIT_PATH"".timer"
+      echo "" >> "$UNIT_PATH"".timer"
+      echo "[Timer]" >> "$UNIT_PATH"".timer"
+      echo "OnUnitActiveSec=30m" >> "$UNIT_PATH"".timer"
+      echo "Persistent=true" >> "$UNIT_PATH"".timer"
+      echo "RandomizedDelaySec=20s" >> "$UNIT_PATH"".timer"
+      echo "" >> "$UNIT_PATH"".timer"
+      echo "[Install]" >> "$UNIT_PATH"".timer"
+      echo "WantedBy=timers.target" >> "$UNIT_PATH"".timer"
       # Install
       systemctl daemon-reload
       systemctl enable iot-registry.service
