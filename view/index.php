@@ -2,60 +2,60 @@
 <head>
     <title>IOT Device Registry</title>
     <style>
-        body, h1, h2, h3 {
-            font-family: Arial, Helvetica, sans-serif;
-        }
-        /*Style for Table*/
-        table, th , td {
-            border: 1px solid grey;
-            border-collapse: collapse;
-            padding: 8px;
-            font-family: Arial, Helvetica, sans-serif;
-        }
-        /*Style for Table Header*/
-        th {
-            background: darkblue;
-            color: white;
-            text-align: left;
-        }
-        /*Style for Alternate Rows*/
-        table tr:nth-child(odd) {
-            background-color: lightgray;
-        }
-        table tr:nth-child(even) {
-            background-color: #FFFFFF;
-        }
-        .status {
-            height: 32px;
-            width: 32px;
-        }
-        .warning {
-            color: red;
-        }
+    body, h1, h2, h3 {
+        font-family: Arial, Helvetica, sans-serif;
+    }
+    /*Style for Table*/
+    table, th , td {
+        border: 1px solid grey;
+        border-collapse: collapse;
+        padding: 8px;
+        font-family: Arial, Helvetica, sans-serif;
+    }
+    /*Style for Table Header*/
+    th {
+        background: darkblue;
+        color: white;
+        text-align: left;
+    }
+    /*Style for Alternate Rows*/
+    table tr:nth-child(odd) {
+        background-color: lightgray;
+    }
+    table tr:nth-child(even) {
+        background-color: #FFFFFF;
+    }
+    .status {
+        height: 32px;
+        width: 32px;
+    }
+    .warning {
+        color: red;
+    }
     </style>
     <script>
-        function showLocalTime() {
-            var timeStamps = document.getElementsByClassName("timeStamp");
-            for (var i = 0; i < timeStamps.length; i++) {
-                try {
-                    var timeStamp = timeStamps[i].innerText.replace(" UTC", "");
-                    var dt = tzShift(new Date(timeStamp));
-                    timeStamps[i].innerText = dt.toLocaleDateString('en-US') + " " + dt.toLocaleTimeString('en-US');
-                } catch (ex) {
-                    //UTC will have to do!
-                }
+    function showLocalTime() {
+        var timeStamps = document.getElementsByClassName("timeStamp");
+        for (var i = 0; i < timeStamps.length; i++) {
+            try {
+                var timeStamp = timeStamps[i].innerText.replace(" UTC", "");
+                var dt = tzShift(new Date(timeStamp));
+                timeStamps[i].innerText = dt.toLocaleDateString('en-US') + " " + dt.toLocaleTimeString('en-US');
+            } catch (ex) {
+                //UTC will have to do!
             }
         }
-        function tzShift(dt) {
-            now = new Date();
-            var diff = now.getHours() - now.getUTCHours();
-            var dtShifted = dt.addHours(diff);
-            return dtShifted
-        }
-        Date.prototype.addHours = function(h){
-            this.setHours(this.getHours()+h);
-            return this;
-        }
+    }
+    function tzShift(dt) {
+        now = new Date();
+        var diff = now.getHours() - now.getUTCHours();
+        var dtShifted = dt.addHours(diff);
+        return dtShifted
+    }
+    Date.prototype.addHours = function(h){
+        this.setHours(this.getHours()+h);
+        return this;
+    }
     </script>
 </head>
 <body onload="showLocalTime()">
