@@ -37,9 +37,13 @@
         function showLocalTime() {
             var timeStamps = document.getElementsByClassName("timeStamp");
             for (var i = 0; i < timeStamps.length; i++) {
-                var timeStamp = timeStamps[i].innerText.replace(" UTC", "");
-                var dt = tzShift(new Date(timeStamp));
-                timeStamps[i].innerText = dt.toLocaleDateString('en-US') + " " + dt.toLocaleTimeString('en-US');
+                try {
+                    var timeStamp = timeStamps[i].innerText.replace(" UTC", "");
+                    var dt = tzShift(new Date(timeStamp));
+                    timeStamps[i].innerText = dt.toLocaleDateString('en-US') + " " + dt.toLocaleTimeString('en-US');
+                } catch (ex) {
+                    //UTC will have to do!
+                }
             }
         }
         function tzShift(dt) {
