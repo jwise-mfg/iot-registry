@@ -109,8 +109,8 @@ removeservice() {
          systemctl stop iot-registry.timer
          systemctl disable iot-registry.service
          systemctl disable iot-registry.timer
-         rm $"UNIT_PATH"".service"
-         rm $"UNIT_PATH"".timer"
+         rm "$UNIT_PATH"".service"
+         rm "$UNIT_PATH"".timer"
          systemctl daemon-reload
       else
          echo Service not found to remove!
