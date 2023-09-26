@@ -166,9 +166,10 @@ fi
 ## Normal Operation
 if [ "$1" != "" ]; then
    echo "Invalid command-line arguments. Use:"
-   echo "--install-service   Installs this script as a service"
-   echo "--remove-service    Remove the service for this script"
-   echo "--generate-id       Generate a unique ID, or show one if it already exists"
+   echo "--install-service    Installs this script as a service (run as sudo)"
+   echo "--remove-service     Remove the service for this script (run as sudo)"
+   echo "--generate-id        Generate a unique ID, or show one if it already exists"
+   echo "--generate-id --yes  Generate/show a unique ID, set hostname based on it (run as sudo)"
    exit 1
 fi
 # Get or Create Unique ID
