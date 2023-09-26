@@ -147,7 +147,12 @@ if [ "$1" == "--generate-id" ]; then
       newhost="$(hostname)"-"${uuid:(-6)}"
       if [ "$EUID" -eq 0 ]; then
          if [ $(which systemctl) ]; then
-            yes_or_no "Set suggested hostname? $newhost" && hostname $newhost && hostnamectl set-hostname $newhost
+            if [ "$2" == "--yes" ]; then
+               echo Setting hostname: $newhost
+               hostname $newhost && hostnamectl set-hostname $newhost
+            else
+               yes_or_no "Set suggested hostname? $newhost" && hostname $newhost && hostnamectl set-hostname $newhost
+            fi
          else
             echo Suggested hostname: $newhost
          fi   
