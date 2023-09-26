@@ -1,6 +1,6 @@
 #!/bin/bash
 url='https://iot.jonathanwise.net/checkin/'
-queryString='?version=1.2&'
+queryString='?version=1.3&'
 
 finduser() {
    lastUsers=$(last -1 -n 1)
@@ -41,6 +41,7 @@ installservice() {
       fi
    fi
    if [ $(which systemctl) ]; then
+      # Create the Service
       echo "[Unit]" > $UNIT_PATH
       echo "Description=IOT Registry Service" >> $UNIT_PATH
       echo "Wants = network-online.target" >> $UNIT_PATH
@@ -52,9 +53,23 @@ installservice() {
       echo "" >> $UNIT_PATH
       echo "[Install]" >> $UNIT_PATH
       echo "WantedBy=multi-user.target" >> $UNIT_PATH
+      # Create the Timer
+      echo "[Unit]" > $UNIT_PATH
+      echo "Description=Periodic IOT Registry Checkin" >> $UNIT_PATH
+      echo "" >> $UNIT_PATH
+      echo "[Timer]" >> $UNIT_PATH
+      echo "OnUnitActiveSec=30m" >> $UNIT_PATH
+      echo "Persistent=true" >> $UNIT_PATH
+      echo "RandomizedDelaySec=20s" >> $UNIT_PATH
+      echo "" >> $UNIT_PATH
+      echo "[Install]" >> $UNIT_PATH
+      echo "WantedBy=timers.target" >> $UNIT_PATH
+      # Install
       systemctl daemon-reload
       systemctl enable iot-registry.service
       systemctl start iot-registry.service
+      systemctl enable iot-registry.timer
+      systemctl start iot-registry.timer
   else
     #TODO: Come up with a better way to control services on systemd-less environments
     echo Now add to cron lines like:
@@ -80,7 +95,7 @@ removeservice() {
    currHome="/home/$currUser/"
    SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
    DEST_PATH=/opt/iot-registry/
-   UNIT_PATH=/etc/systemd/system/iot-registry.service
+   UNIT_PATH=/etc/systemd/system/iot-registry
    if [ -f "$DEST_PATH""checkin" ]; then
       mv $DEST_PATH"checkin" $currHome"checkin"
       chown $currUser:$currUser $currHome"checkin"
@@ -89,10 +104,13 @@ removeservice() {
       rm -rf $DEST_PATH
    fi
    if [ $(which systemctl) ]; then
-      if [ -f $UNIT_PATH ]; then
+      if [ -f "$UNIT_PATH"".service" ]; then
          systemctl stop iot-registry.service
+         systemctl stop iot-registry.timer
          systemctl disable iot-registry.service
-         rm $UNIT_PATH
+         systemctl disable iot-registry.timer
+         rm $"UNIT_PATH"".service"
+         rm $"UNIT_PATH"".timer"
          systemctl daemon-reload
       else
          echo Service not found to remove!
@@ -213,10 +231,6 @@ if [ $(which netstat) ]; then
    ports=$(netstat -lntu)
 fi
 
+# Send the check-in
 curl -k --header 'Content-Type: text/plain' --data "$ports" "$url"
-
-# If installed as a service, try to run again in 30 minutes
-if [ $(which systemctl) ]; then
-   systemd-run --on-active="30m" --unit iot-registry.service > /dev/null 2>&1
-fi
 exit

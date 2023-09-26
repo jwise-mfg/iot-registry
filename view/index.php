@@ -1,7 +1,7 @@
 <html>
 <head>
     <title>IOT Device Registry</title>
-    <meta http-equiv="refresh" content="300">
+    <meta http-equiv="refresh" content="180">
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
@@ -12,20 +12,17 @@
     body, h1, h2, h3 {
         font-family: Arial, Helvetica, sans-serif;
     }
-    /*Style for Table*/
     table, th , td {
         border: 1px solid grey;
         border-collapse: collapse;
         padding: 8px;
         font-family: Arial, Helvetica, sans-serif;
     }
-    /*Style for Table Header*/
     th {
         background: darkblue;
         color: white;
         text-align: left;
     }
-    /*Style for Alternate Rows*/
     table tr:nth-child(odd) {
         background-color: lightgray;
     }
@@ -55,7 +52,7 @@
             alert ("This device has successfully checked in within the past hour.")
         }
         else if (event.target.src.indexOf("icon-yellow") != -1) {
-            alert ("This device has not checked-in within the past hour.")
+            alert ("This device has not checked-in for more than an hour.")
         }
         else if (event.target.src.indexOf("icon-warning") != -1) {
             alert ("This device sent a malformed payload during its last check-in. It may be compromised or have a problem.")
@@ -104,7 +101,6 @@ $warnText = "This device sent a malformed payload on its last check-in, it may b
 $files = glob('../cache/*.{json}', GLOB_BRACE);
 foreach($files as $file) {
     $data = json_decode(file_get_contents("../cache/" . $file));
-    $iconPath = getIconForTimestamp($data->lastcheckin);
     echoLine("<tr class=\"detailRow\">");
     echo("  <td><img class=\"status\" src=\"" . getIconForTimestamp($data->lastcheckin) . "\" onclick=\"explainStatus(event)\"");
     if (isset($data->version))
@@ -142,7 +138,7 @@ function getIconForTimestamp($timeStamp) {
     $checkinTime = date_create($timeStamp);
     $diffTime = date_diff($nowTime, $checkinTime);
     $diffHours = $diffTime->format('%h');
-    $iconPath = "icon-green.png";
+        $iconPath = "icon-green.png";
     if ($diffHours > 1)
         $iconPath = "icon-yellow.png";
     return $iconPath;
