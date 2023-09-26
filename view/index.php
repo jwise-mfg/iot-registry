@@ -1,6 +1,7 @@
 <html>
 <head>
     <title>IOT Device Registry</title>
+    <meta http-equiv="refresh" content="300">
     <style>
     body, h1, h2, h3 {
         font-family: Arial, Helvetica, sans-serif;
@@ -80,7 +81,6 @@
 </head>
 <body onload="showLocalTime()">
 <h2>IOT Device Registry</h2>
-
 <table>
 <tr class="titleRow">
    <th>&nbsp;</th>
@@ -131,7 +131,6 @@ foreach($files as $file) {
 function echoLine($line) {
     echo $line . "\r\n";
 }
-
 function getIconForTimestamp($timeStamp) {
     $nowTime = new \DateTime("now", new \DateTimeZone("UTC"));
     $checkinTime = date_create($timeStamp);
