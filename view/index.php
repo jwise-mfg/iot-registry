@@ -102,7 +102,7 @@ foreach($files as $file) {
     echoLine("<tr class=\"detailRow\">");
     echo("  <td><img class=\"status\" src=\"" . getIconForTimestamp($data->lastcheckin) . "\" onclick=\"explainStatus(event)\"");
     if (isset($data->version))
-        echo(" alt=\"" . $data->version . "\" title=\"" . $data->version . "\">");
+        echo(" alt=\"Checked in with v" . $data->version . "\" title=\"Checked in with v" . $data->version . "\">");
     else
         echo(">");
     if ($data->suspect)
