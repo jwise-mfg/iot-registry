@@ -29,11 +29,31 @@
         height: 32px;
         width: 32px;
     }
+    .alert {
+        height: 20px;
+        width: 20px;
+        position: relative;
+        margin-left: -20px;
+        margin-right: -20px;
+        margin-top: -20px;
+        z-index: 100;
+    }
     .warning {
         color: red;
     }
     </style>
     <script>
+    function explainStatus(event) {
+        if (event.target.src.indexOf("icon-green") != -1) {
+            alert ("This device has successfully checked in within the past hour.")
+        }
+        else if (event.target.src.indexOf("icon-yellow") != -1) {
+            alert ("This device has not checked-in within the past hour.")
+        }
+        else if (event.target.src.indexOf("icon-warning") != -1) {
+            alert ("This device sent a malformed payload during its last check-in. It may be compromised or have a problem.")
+        }
+    }
     function showLocalTime() {
         var timeStamps = document.getElementsByClassName("timeStamp");
         for (var i = 0; i < timeStamps.length; i++) {
@@ -74,16 +94,20 @@
    <th>Ports</th>
 </tr>
 <?php
-$okText = "This device sent a valid payload on its last check-in";
 $warnText = "This device sent a malformed payload on its last check-in, it may be compromised or have a problem.";
 $files = glob('../cache/*.{json}', GLOB_BRACE);
 foreach($files as $file) {
     $data = json_decode(file_get_contents("../cache/" . $file));
+    $iconPath = getIconForTimestamp($data->lastcheckin);
     echoLine("<tr class=\"detailRow\">");
-    if ($data->suspect)
-        echoLine("  <td><img class=\"status\" src=\"icon-warning.png\" alt=\"$warnText\" title=\"$warnText\"></td>");
+    echo("  <td><img class=\"status\" src=\"" . getIconForTimestamp($data->lastcheckin) . "\" onclick=\"explainStatus(event)\"");
+    if (isset($data->version))
+        echo(" alt=\"" . $data->version . "\" title=\"" . $data->version . "\">");
     else
-        echoLine("  <td><img class=\"status\" src=\"icon-green.png\" alt=\"$okText\" title=\"$okText\"></td>");
+        echo(">");
+    if ($data->suspect)
+        echo("<img class=\"alert\" src=\"icon-warning.png\" alt=\"$warnText\" title=\"$warnText\" onclick=\"explainStatus(event)\">");
+    echoLine("</td>");
     echoLine("  <td>" . $data->hostname . "</td>");
     echoLine("  <td>" . $data->wanip . "</td>");
     echoLine("  <td>" . $data->iotid . "</td>");
@@ -106,6 +130,17 @@ foreach($files as $file) {
 }
 function echoLine($line) {
     echo $line . "\r\n";
+}
+
+function getIconForTimestamp($timeStamp) {
+    $nowTime = new \DateTime("now", new \DateTimeZone("UTC"));
+    $checkinTime = date_create($timeStamp);
+    $diffTime = date_diff($nowTime, $checkinTime);
+    $diffHours = $diffTime->format('%h');
+    $iconPath = "icon-green.png";
+    if ($diffHours > 1)
+        $iconPath = "icon-yellow.png";
+    return $iconPath;
 }
 ?>
 </table>
