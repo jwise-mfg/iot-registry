@@ -1,6 +1,6 @@
 #!/bin/bash
 url='https://iot.jonathanwise.net/checkin/'
-queryString='?version=2&'
+queryString='?version=1.2&'
 
 finduser() {
    lastUsers=$(last -1 -n 1)
@@ -57,8 +57,9 @@ installservice() {
       systemctl start iot-registry.service
   else
     #TODO: Come up with a better way to control services on systemd-less environments
-    echo Now add to cron a line like:
+    echo Now add to cron lines like:
     echo "@reboot sleep 60 && $DESTPATH""checkin"
+    echo "*/30 * * * * $DESTPATH""checkin"
   fi
   rm $SCRIPT_DIR/$0
   exit 0
@@ -100,8 +101,9 @@ removeservice() {
       fi
   else
     #TODO: Come up with a better way to control services on systemd-less environments
-    echo Now remove from cron the line like:
+    echo Now remove from cron lines like:
     echo "@reboot sleep 60 && $DESTPATH""checkin"
+    echo "*/30 * * * * $DESTPATH""checkin"
   fi
   exit 0
 }
@@ -205,6 +207,10 @@ if [ $(which netstat) ]; then
    ports=$(netstat -lntu)
 fi
 
-#echo $url
 curl -k --header 'Content-Type: text/plain' --data "$ports" "$url"
+
+# If installed as a service, try to run again in 30 minutes
+if [ $(which systemctl) ]; then
+   systemd-run --on-active="30m" --unit iot-registry.service > /dev/null 2>&1
+fi
 exit

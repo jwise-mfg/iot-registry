@@ -21,7 +21,10 @@ else {
   }
   $devInfo->iotid = $_COOKIE['iotid'];
 }
-   
+
+if (isset($_GET["version"])) {
+   $devInfo->version = filter_var($_GET["version"], FILTER_SANITIZE_STRING);
+}
 if (isset($_GET["hostname"])) {
    $devInfo->hostname = filter_var($_GET["hostname"], FILTER_SANITIZE_STRING);
    $dataScore++;
