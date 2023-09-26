@@ -2,6 +2,9 @@
 <head>
     <title>IOT Device Registry</title>
     <meta http-equiv="refresh" content="300">
+    <!-- favicon from https://www.flaticon.com/free-icons/networking -->
+    <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon">
+    <link rel="icon" href="../favicon.ico" type="image/x-icon">
     <style>
     body, h1, h2, h3 {
         font-family: Arial, Helvetica, sans-serif;
