@@ -49,13 +49,13 @@
     <script>
     function explainStatus(event) {
         if (event.target.src.indexOf("icon-green") != -1) {
-            alert ("This device has successfully checked in within the past hour.")
+            alert ("This device has successfully checked in using the " + event.target.getAttribute("alt") + " script within the past hour.")
         }
         else if (event.target.src.indexOf("icon-yellow") != -1) {
-            alert ("This device has not checked-in for more than an hour.")
+            alert ("This device has not checked-in for more than an hour. The last successful check used the " + event.target.getAttribute("alt") + " script.")
         }
         else if (event.target.src.indexOf("icon-warning") != -1) {
-            alert ("This device sent a malformed payload during its last check-in. It may be compromised or have a problem.")
+            alert (event.target.getAttribute("alt"));
         }
     }
     function showLocalTime() {
@@ -104,7 +104,7 @@ foreach($files as $file) {
     echoLine("<tr class=\"detailRow\">");
     echo("  <td><img class=\"status\" src=\"" . getIconForTimestamp($data->lastcheckin) . "\" onclick=\"explainStatus(event)\"");
     if (isset($data->version))
-        echo(" alt=\"Checked in with v" . $data->version . "\" title=\"Checked in with v" . $data->version . "\">");
+        echo(" alt=\"v" . $data->version . "\" title=\"v" . $data->version . "\">");
     else
         echo(">");
     if ($data->suspect)
