@@ -4,6 +4,7 @@ $postBody=file_get_contents('php://input');
 
 $devInfo = new stdClass();
 $devInfo->wanip = getUserIP();
+$devInfo->checkinServer = $_SERVER['HTTP_HOST'];
 $devInfo->lastcheckin = date('m/d/Y h:i:s a', time());
 $devInfo->suspect = false;
 
@@ -21,7 +22,6 @@ else {
   }
   $devInfo->iotid = $_COOKIE['iotid'];
 }
-
 if (isset($_GET["version"])) {
    $devInfo->version = filter_var($_GET["version"], FILTER_SANITIZE_STRING);
 }
