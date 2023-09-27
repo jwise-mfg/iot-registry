@@ -104,7 +104,7 @@ foreach($files as $file) {
     echoLine("<tr class=\"detailRow\">");
     echo("  <td><img class=\"status\" src=\"" . getIconForTimestamp($data->lastcheckin) . "\" onclick=\"explainStatus(event)\"");
     if (isset($data->version))
-        echo(" alt=\"v" . $data->version . " (" . $data->checkinServer . ")\" title=\"v" . $data->version . " (" . $data->checkinServer . ")\">");
+        echo(" alt=\"v" . $data->version . "\" title=\"v" . $data->version . "\">");
     else
         echo(">");
     if ($data->suspect)
@@ -113,7 +113,7 @@ foreach($files as $file) {
     echoLine("  <td>" . $data->hostname . "</td>");
     echoLine("  <td>" . $data->wanip . "</td>");
     echoLine("  <td>" . $data->iotid . "</td>");
-    echoLine("  <td class=\"timestamp\">" . $data->lastcheckin . " UTC</td>");
+    echoLine("  <td class=\"timestamp\" alt=\"$data->checkinServer\" title=\"$data->checkinServer\">" . $data->lastcheckin . " UTC</td>");
     echoLine("  <td>" . $data->username . "</td>");
     echoLine("  <td>" . $data->arch . "</td>");
     if (is_array($data->lanips)) {
