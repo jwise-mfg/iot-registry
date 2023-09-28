@@ -29,7 +29,7 @@
     table tr:nth-child(even) {
         background-color: #FFFFFF;
     }
-    .iotid {
+    .mono {
         font-family: 'Courier New', Courier, monospace;
     }
     .status {
@@ -113,9 +113,9 @@ foreach($files as $file) {
     if ($data->suspect)
         echo("<img class=\"alert\" src=\"icon-warning.png\" alt=\"$warnText\" title=\"$warnText\" onclick=\"explainStatus(event)\">");
     echoLine("</td>");
-    echoLine("  <td>" . $data->hostname . "</td>");
+    echoLine("  <td class=\"mono\">" . $data->hostname . "</td>");
     echoLine("  <td>" . $data->wanip . "</td>");
-    echoLine("  <td class=\"iotid\">" . $data->iotid . "</td>");
+    echoLine("  <td class=\"mono\">" . $data->iotid . "</td>");
     echoLine("  <td class=\"timestamp\" alt=\"$data->checkinServer\" title=\"$data->checkinServer\">" . $data->lastcheckin . " UTC</td>");
     echoLine("  <td>" . $data->username . "</td>");
     echoLine("  <td>" . $data->arch . "</td>");
