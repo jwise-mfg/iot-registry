@@ -32,6 +32,7 @@ generateid() {
       nic=${nics[0]}             #find the first network card
       mac=$(cat $nic/address)    #find the mac address of the first network card
       uuid=$(echo "${mac//:}")
+      uuid=$uuid$(echo $((10 + $RANDOM % 99)))
       if [ -f /opt/iot-registry/checkin ]; then
          echo $uuid > /opt/iot-registry/.iotid
       else
