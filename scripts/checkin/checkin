@@ -8,6 +8,18 @@ finduser() {
    echo $1
 }
 
+
+## Prompt user function
+function yes_or_no {
+    while true; do
+        read -p "$* [y/n]: " yn
+        case $yn in
+            [Yy]*) return 0  ;;  
+            [Nn]*) return  1 ;;
+        esac
+    done
+}
+
 ## Install as Service
 installservice() {
    if [ "$EUID" -ne 0 ]
@@ -36,8 +48,7 @@ installservice() {
       mv $currHome".iotid" $DEST_PATH".iotid"
    else
       if [ ! -f $DEST_PATH".iotid" ]; then
-         uuid=$(cat /proc/sys/kernel/random/uuid)
-         echo $uuid > $DEST_PATH".iotid"
+         generateid
       fi
    fi
    if [ $(which systemctl) ]; then
@@ -130,17 +141,6 @@ if [ "$1" == "--remove-service" ]; then
    exit
 fi
 
-## Prompt user
-function yes_or_no {
-    while true; do
-        read -p "$* [y/n]: " yn
-        case $yn in
-            [Yy]*) return 0  ;;  
-            [Nn]*) return  1 ;;
-        esac
-    done
-}
-
 ## Generate IOT ID
 generateid() {
    if [ -f $currHome/.iotid ]; then
@@ -150,8 +150,15 @@ generateid() {
       uuid=$(cat /opt/iot-registry/.iotid)
    fi
    if [ ! "$uuid" ]; then
-      uuid=$(cat /proc/sys/kernel/random/uuid)
-      echo $uuid > $currHome/.iotid
+      nics=(/sys/class/net/*)    #find the network cards
+      nic=${nics[0]}             #find the first network card
+      mac=$(cat $nic/address)    #find the mac address of the first network card
+      uuid=$(echo "${mac//:}")
+      if [ -f /opt/iot-registry/checkin ]; then
+         echo $uuid > /opt/iot-registry/.iotid
+      else
+         echo $uuid > $currHome/.iotid
+      fi
    fi
    echo $uuid
 }
