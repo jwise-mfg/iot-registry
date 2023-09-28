@@ -80,7 +80,6 @@ installservice() {
    if [ "$currUser" == "root" ]; then
       echo "Warning: root user in active use, don't ship in this state!"
    fi
-   
    mkdir -p /opt/iot-registry
    SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
    UNIT_PATH=/etc/systemd/system/iot-registry
@@ -95,7 +94,8 @@ installservice() {
       mv $currHome".iotid" $DEST_PATH".iotid"
    else
       if [ ! -f $DEST_PATH".iotid" ]; then
-         generateid
+         uuid="$(generateid)"
+         echo IOT ID: $uuid;
       fi
    fi
    if [ $(which systemctl) ]; then
