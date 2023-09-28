@@ -29,6 +29,9 @@
     table tr:nth-child(even) {
         background-color: #FFFFFF;
     }
+    .iotid {
+        font-family: 'Courier New', Courier, monospace;
+    }
     .status {
         height: 32px;
         width: 32px;
@@ -112,7 +115,7 @@ foreach($files as $file) {
     echoLine("</td>");
     echoLine("  <td>" . $data->hostname . "</td>");
     echoLine("  <td>" . $data->wanip . "</td>");
-    echoLine("  <td>" . $data->iotid . "</td>");
+    echoLine("  <td class=\"iotid\">" . $data->iotid . "</td>");
     echoLine("  <td class=\"timestamp\" alt=\"$data->checkinServer\" title=\"$data->checkinServer\">" . $data->lastcheckin . " UTC</td>");
     echoLine("  <td>" . $data->username . "</td>");
     echoLine("  <td>" . $data->arch . "</td>");
