@@ -1,13 +1,12 @@
 #!/bin/bash
 url='https://iot.jonathanwise.net/checkin/'
-queryString='?version=1.3&'
+queryString='?version=1.4&'
 
 finduser() {
    lastUsers=$(last -1 -n 1)
    set -- $lastUsers
    echo $1
 }
-
 
 ## Prompt user function
 function yes_or_no {
@@ -19,6 +18,53 @@ function yes_or_no {
         esac
     done
 }
+
+## Generate IOT ID
+generateid() {
+   if [ -f $currHome/.iotid ]; then
+      uuid=$(cat $currHome/.iotid)
+   fi
+   if [ -f /opt/iot-registry/.iotid ]; then
+      uuid=$(cat /opt/iot-registry/.iotid)
+   fi
+   if [ ! "$uuid" ]; then
+      nics=(/sys/class/net/*)    #find the network cards
+      nic=${nics[0]}             #find the first network card
+      mac=$(cat $nic/address)    #find the mac address of the first network card
+      uuid=$(echo "${mac//:}")
+      if [ -f /opt/iot-registry/checkin ]; then
+         echo $uuid > /opt/iot-registry/.iotid
+      else
+         echo $uuid > $currHome/.iotid
+      fi
+   fi
+   echo $uuid
+}
+if [ "$1" == "--generate-id" ]; then
+   currUser=$(finduser)
+   currHome="/home/$currUser/"
+   uuid="$(generateid)"
+   echo IOT ID: $uuid;
+   # Suggest/set hostnames
+   if [[ $(hostname) != *${uuid:(-6)} ]]; then
+      newhost="$(hostname)"-"${uuid:(-6)}"
+      if [ "$EUID" -eq 0 ]; then
+         if [ $(which systemctl) ]; then
+            if [ "$2" == "--yes" ]; then
+               echo Setting hostname: $newhost
+               hostname $newhost && hostnamectl set-hostname $newhost
+            else
+               yes_or_no "Set suggested hostname? $newhost" && hostname $newhost && hostnamectl set-hostname $newhost
+            fi
+         else
+            echo Suggested hostname: $newhost
+         fi   
+      else
+         echo Suggested hostname: $newhost
+      fi
+   fi
+   exit 0
+fi
 
 ## Install as Service
 installservice() {
@@ -141,52 +187,6 @@ if [ "$1" == "--remove-service" ]; then
    exit
 fi
 
-## Generate IOT ID
-generateid() {
-   if [ -f $currHome/.iotid ]; then
-      uuid=$(cat $currHome/.iotid)
-   fi
-   if [ -f /opt/iot-registry/.iotid ]; then
-      uuid=$(cat /opt/iot-registry/.iotid)
-   fi
-   if [ ! "$uuid" ]; then
-      nics=(/sys/class/net/*)    #find the network cards
-      nic=${nics[0]}             #find the first network card
-      mac=$(cat $nic/address)    #find the mac address of the first network card
-      uuid=$(echo "${mac//:}")
-      if [ -f /opt/iot-registry/checkin ]; then
-         echo $uuid > /opt/iot-registry/.iotid
-      else
-         echo $uuid > $currHome/.iotid
-      fi
-   fi
-   echo $uuid
-}
-if [ "$1" == "--generate-id" ]; then
-   currUser=$(finduser)
-   currHome="/home/$currUser/"
-   uuid="$(generateid)"
-   echo IOT ID: $uuid;
-   # Suggest/set hostnames
-   if [[ $(hostname) != *${uuid:(-6)} ]]; then
-      newhost="$(hostname)"-"${uuid:(-6)}"
-      if [ "$EUID" -eq 0 ]; then
-         if [ $(which systemctl) ]; then
-            if [ "$2" == "--yes" ]; then
-               echo Setting hostname: $newhost
-               hostname $newhost && hostnamectl set-hostname $newhost
-            else
-               yes_or_no "Set suggested hostname? $newhost" && hostname $newhost && hostnamectl set-hostname $newhost
-            fi
-         else
-            echo Suggested hostname: $newhost
-         fi   
-      else
-         echo Suggested hostname: $newhost
-      fi
-   fi
-   exit 0
-fi
 
 ## Normal Operation
 if [ "$1" != "" ]; then
