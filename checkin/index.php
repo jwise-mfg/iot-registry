@@ -39,7 +39,7 @@ if (isset($_GET["arch"])) {
 if (isset($_GET["ips"])) {
    $ips = $_GET["ips"];
    if (strpos($ips, ",") > -1) { //List of IPs
-      $ipList = explode($ips, ",");
+      $ipList = explode(",", $ips);
       $devInfo->lanips = [];
       foreach ($ipList as $thisIp) {
          $thisIp = filter_var($thisIp, FILTER_VALIDATE_IP);
