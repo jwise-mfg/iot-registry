@@ -106,31 +106,39 @@ foreach($files as $file) {
     $data = json_decode(file_get_contents("../cache/" . $file));
     echoLine("<tr class=\"detailRow\">");
     echo("  <td><img class=\"status\" src=\"" . getIconForTimestamp($data->lastcheckin) . "\" onclick=\"explainStatus(event)\"");
-    if (isset($data->version))
-        echo(" alt=\"v" . $data->version . "\" title=\"v" . $data->version . "\">");
-    else
+    if (isset($data->version)) {
+        $escapedVersion = htmlspecialchars($data->version, ENT_QUOTES, 'UTF-8');
+        echo(" alt=\"v" . $escapedVersion . "\" title=\"v" . $escapedVersion . "\">");
+    } else {
         echo(">");
-    if ($data->suspect)
-        echo("<img class=\"alert\" src=\"icon-warning.png\" alt=\"$warnText\" title=\"$warnText\" onclick=\"explainStatus(event)\">");
+    }
+    if ($data->suspect) {
+        $escapedWarnText = htmlspecialchars($warnText, ENT_QUOTES, 'UTF-8');
+        echo("<img class=\"alert\" src=\"icon-warning.png\" alt=\"$escapedWarnText\" title=\"$escapedWarnText\" onclick=\"explainStatus(event)\">");
+    }
     echoLine("</td>");
-    echoLine("  <td class=\"mono\">" . $data->hostname . "</td>");
-    echoLine("  <td>" . $data->wanip . "</td>");
-    echoLine("  <td class=\"mono\">" . $data->iotid . "</td>");
-    echoLine("  <td class=\"timestamp\" alt=\"$data->checkinServer\" title=\"$data->checkinServer\">" . $data->lastcheckin . " UTC</td>");
-    echoLine("  <td>" . $data->username . "</td>");
-    echoLine("  <td>" . $data->arch . "</td>");
+    echoLine("  <td class=\"mono\">" . htmlspecialchars($data->hostname ?? '', ENT_QUOTES, 'UTF-8') . "</td>");
+    echoLine("  <td>" . htmlspecialchars($data->wanip ?? '', ENT_QUOTES, 'UTF-8') . "</td>");
+    echoLine("  <td class=\"mono\">" . htmlspecialchars($data->iotid ?? '', ENT_QUOTES, 'UTF-8') . "</td>");
+    $escapedServer = htmlspecialchars($data->checkinServer ?? '', ENT_QUOTES, 'UTF-8');
+    $escapedCheckin = htmlspecialchars($data->lastcheckin ?? '', ENT_QUOTES, 'UTF-8');
+    echoLine("  <td class=\"timestamp\" alt=\"$escapedServer\" title=\"$escapedServer\">" . $escapedCheckin . " UTC</td>");
+    echoLine("  <td>" . htmlspecialchars($data->username ?? '', ENT_QUOTES, 'UTF-8') . "</td>");
+    echoLine("  <td>" . htmlspecialchars($data->arch ?? '', ENT_QUOTES, 'UTF-8') . "</td>");
     if (is_array($data->lanips)) {
         echoLine("  <td>");
         foreach($data->lanips as $ip) {
-            echoLine($ip . "<br>");
+            echoLine(htmlspecialchars($ip, ENT_QUOTES, 'UTF-8') . "<br>");
         }
         echoLine("  </td>");
     } else {
-        echoLine("  <td>" . $data->lanips . "</td>");
+        echoLine("  <td>" . htmlspecialchars($data->lanips ?? '', ENT_QUOTES, 'UTF-8') . "</td>");
     }
     $portsFile = str_replace("info.json", "ports.txt", $file);
-    if (file_exists("../cache/" . $portsFile))
-        echoLine("  <td> <a href=\"ports.php?iotid=$data->iotid\" target=\"ports\">View Ports</a> </td>");
+    if (file_exists("../cache/" . $portsFile)) {
+        $escapedIotid = htmlspecialchars($data->iotid ?? '', ENT_QUOTES, 'UTF-8');
+        echoLine("  <td> <a href=\"ports.php?iotid=" . urlencode($data->iotid ?? '') . "\" target=\"ports\">View Ports</a> </td>");
+    }
     echoLine("</tr>");
 }
 function echoLine($line) {

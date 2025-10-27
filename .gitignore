@@ -1,3 +1,4 @@
 cache/*.json
 cache/*.txt
+cache/.ratelimit_*
 home.html
